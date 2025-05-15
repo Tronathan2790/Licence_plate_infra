@@ -23,3 +23,8 @@ resource "aws_lambda_permission" "allow_bucket" {
   principal     = "s3.amazonaws.com"
   source_arn    = aws_s3_bucket.licence_plate_bucket.arn
 }
+
+ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
+     role       = aws_iam_role.iam_for_s3_lambda.name
+     policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+   }
