@@ -16,25 +16,5 @@ resource "aws_dynamodb_table" "licence_plate_table" {
     type = "S"
   }
 
-  attribute {
-    name = "StartTime"
-    type = "S"
-  }
-   attribute {
-    name = "EndTime"
-    type = "S"
-  }
-  attribute {
-    name = "LicencePlateNo"
-    type = "S"
-  }
-  attribute {
-    name = "State"
-    type = "S"
-  }
-  attribute {
-    name = "Status"
-    type = "S"
-  }
   
 }
