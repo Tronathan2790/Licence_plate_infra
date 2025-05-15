@@ -10,7 +10,7 @@ resource "aws_lambda_function" "s3_notification_function" {
   timeout = 900
   environment {
     variables = {
-      SQS_QUEUE_URL = aws_sqs_queue.licence_plate_queue.name
+      SQS_QUEUE_NAME = aws_sqs_queue.licence_plate_queue.name
     }
   }
 }
