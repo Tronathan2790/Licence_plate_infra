@@ -5,6 +5,15 @@ terraform {
       version = "~> 5.0"
     }
   }
+
+   cloud { 
+    
+    organization = "tronathan2790-org" 
+
+    workspaces { 
+      name = "Github-Actions" 
+    } 
+  } 
 }
 
 # Configure the AWS Provider
