@@ -15,12 +15,15 @@ def lambda_handler(event,context):
 
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(DYNAMODB_TABLE_NAME)
-    current_time = datetime.utcnow().isoformat()
-    id = uuid.uuid4()
+    current_time = str(datetime.utcnow().isoformat())
+    id = str(uuid.uuid4())
     item = {
         'JobID': id,
         'uuid': user_uuid,
         'StartTime': current_time,
+        'TimeCompleted': "",
+        'Licence_plate': "",
+        'State': "",
         'Status':"Processing"
     }
     table.put_item(Item=item)
