@@ -60,3 +60,35 @@ resource "aws_iam_role_policy_attachment" "lambda_sqs_attach" {
   role       = aws_iam_role.iam_for_s3_lambda.name
   policy_arn = aws_iam_policy.lambda_sqs_policy.arn
 }
+
+resource "aws_iam_policy" "lambda_dynamo_policy" {
+  name        = "LambdaDynamoDBScopedAccess"
+  description = "IAM policy for Lambda to access a specific DynamoDB table"
+  policy      = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:Query",
+          "dynamodb:Scan",
+          "dynamodb:BatchGetItem",
+          "dynamodb:BatchWriteItem"
+        ]
+        Resource = [
+          aws_dynamodb_table.licence_plate_table.arn,
+          "${aws_dynamodb_table.licence_plate_table.arn}/index/*"
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_dynamo_attach" {
+  role       = aws_iam_role.iam_for_s3_lambda.name
+  policy_arn = aws_iam_policy.lambda_dynamo_policy.arn
+}

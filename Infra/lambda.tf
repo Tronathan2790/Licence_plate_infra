@@ -11,6 +11,7 @@ resource "aws_lambda_function" "s3_notification_function" {
   environment {
     variables = {
       SQS_QUEUE_NAME = aws_sqs_queue.licence_plate_queue.name
+      DYNAMODB_TABLE_NAME = aws_dynamodb_table.licence_plate_table.name
     }
   }
 }
