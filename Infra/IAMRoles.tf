@@ -28,3 +28,35 @@ resource "aws_lambda_permission" "allow_bucket" {
      role       = aws_iam_role.iam_for_s3_lambda.name
      policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
    }
+
+resource "aws_iam_policy" "lambda_sqs_policy" {
+  name        = "LambdaSQSSendMessagePolicy"
+  description = "Allows Lambda to send messages to SQS"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = [
+          "sqs:SendMessage"
+        ],
+        Effect   = "Allow",
+        Resource = aws_sqs_queue.licence_plate_queue.arn
+      },
+      {
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Effect   = "Allow",
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_sqs_attach" {
+  role       = aws_iam_role.iam_for_s3_lambda.name
+  policy_arn = aws_iam_policy.lambda_sqs_policy.arn
+}

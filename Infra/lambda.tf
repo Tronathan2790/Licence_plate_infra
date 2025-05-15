@@ -8,4 +8,9 @@ resource "aws_lambda_function" "s3_notification_function" {
   runtime       = "python3.10"
   source_code_hash = filebase64sha256("lambda_code.zip")
   timeout = 900
+  environment {
+    variables = {
+      SQS_QUEUE_URL = aws_sqs_queue.licence_plate_queue.name
+    }
+  }
 }
