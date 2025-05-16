@@ -97,7 +97,8 @@ jobs:
     defaults:
       run:
         shell: bash
-
+    env:
+      CLUSTER_NAME: ${{ needs.terraform.outputs.cluster_name }}
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -111,7 +112,7 @@ jobs:
           version: v1.29.2
       - name: Update kubeconfig
         run: |
-          aws eks update-kubeconfig --region ap-southeast-2 --name ${{ env.CLUSTER_NAME }}
+          aws eks update-kubeconfig --region ap-southeast-2 --name $CLUSTER_NAME
       - name: Apply Kubernetes resources
         run: |
           kubectl apply -f Infra/k8s/serviceaccount.yaml
