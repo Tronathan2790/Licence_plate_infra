@@ -133,3 +133,40 @@ resource "aws_iam_role_policy" "keda_sqs_access" {
     ]
   })
 }
+
+resource "aws_iam_policy" "eks_plate_policy" {
+  name        = "eks-plate-policy"
+  description = "Allows access to specific resources"
+  policy      = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["s3:GetObject"]
+        Resource = "arn:aws:s3:::my-bucket/*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["sqs:SendMessage", "sqs:ReceiveMessage", "sqs:DeleteMessage"]
+        Resource = "arn:aws:sqs:ap-southeast-2:123456789012:my-queue"
+      },
+      {
+        Effect   = "Allow"
+        Action = [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:Query",
+          "dynamodb:Scan",
+          "dynamodb:BatchGetItem",
+          "dynamodb:BatchWriteItem"
+        ]
+        Resource = [
+          aws_dynamodb_table.licence_plate_table.arn,
+          "${aws_dynamodb_table.licence_plate_table.arn}/index/*"
+        ]
+      }
+    ]
+  })
+}
