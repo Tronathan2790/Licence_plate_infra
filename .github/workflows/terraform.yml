@@ -62,9 +62,10 @@ jobs:
       run: terraform apply -auto-approve -input=false
     
     - name: Export Terraform Outputs to GitHub Environment
+      working-directory: ./Infr
       run: |
-          echo "sqs_url=$(terraform -chdir=Infra output -raw sqs_queue_url)" >> $GITHUB_ENV
-          echo "iam_role_arn=$(terraform -chdir=Infra output -raw keda_sqs_role_arn)" >> $GITHUB_ENV
+          echo "sqs_url=$(terraform  output  sqs_queue_url)" >> $GITHUB_ENV
+          echo "iam_role_arn=$(terraform  output  keda_sqs_role_arn)" >> $GITHUB_ENV
 
     - name: Update YAMLs
       run: |
