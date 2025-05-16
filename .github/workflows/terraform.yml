@@ -75,11 +75,6 @@ jobs:
           echo "EOF"
         } >> $GITHUB_ENV
 
-        {
-          echo "CLUSTER_NAME<<EOF"
-          terraform -chdir=Infra output -raw eks_cluster_name
-          echo "EOF"
-        } >> $GITHUB_ENV
     - name: Update YAMLs
       run: |
           SQS_URL=$(echo "${{ env.sqs_url }}" | tr -d '\n')
@@ -97,8 +92,7 @@ jobs:
     defaults:
       run:
         shell: bash
-    env:
-      CLUSTER_NAME: ${{ needs.terraform.outputs.cluster_name }}
+    
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -112,7 +106,7 @@ jobs:
           version: v1.29.2
       - name: Update kubeconfig
         run: |
-          aws eks update-kubeconfig --region ap-southeast-2 --name ${{ env.CLUSTER_NAME }}
+          aws eks update-kubeconfig --region ap-southeast-2 --name Licence_Plate_Cluster
       - name: Apply Kubernetes resources
         run: |
           kubectl apply -f Infra/k8s/serviceaccount.yaml
