@@ -143,7 +143,7 @@ resource "aws_iam_policy" "eks_plate_policy" {
       {
         Effect   = "Allow"
         Action   = ["s3:GetObject"]
-        Resource = "arn:aws:s3:::my-bucket/*"
+        Resource = aws_s3_bucket.licence_plate_bucket.arn
       },
       {
         Effect   = "Allow"
