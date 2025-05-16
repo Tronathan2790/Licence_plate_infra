@@ -3,7 +3,7 @@ output "eks_cluster_name" {
 }
 
 output "sqs_queue_url" {
-  value = aws_sqs_queue.licence_plate_queue.id
+  value = aws_sqs_queue.licence_plate_queue.url
 }
 
 output "keda_sqs_role_arn" {

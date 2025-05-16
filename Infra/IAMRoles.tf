@@ -87,7 +87,10 @@ resource "aws_iam_policy" "lambda_dynamo_policy" {
     ]
   })
 }
-
+resource "aws_iam_role_policy_attachment" "lambda_Dynamo_attach" {
+  role       = aws_iam_role.iam_for_s3_lambda.name
+  policy_arn = aws_iam_policy.lambda_dynamo_policy.arn
+}
 data "aws_iam_policy_document" "keda_assume_role" {
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
