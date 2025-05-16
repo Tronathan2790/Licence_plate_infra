@@ -67,6 +67,8 @@ jobs:
           sed -i "s|<ROLE_ARN>|${{ env.iam_role_arn }}|g" Infra/k8s/serviceaccount.yaml
 
   Kubernetes:
+    needs: terraform
+
     name: 'Setup Kubernetes'
     runs-on: ubuntu-latest
     environment: production
