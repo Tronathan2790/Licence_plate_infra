@@ -72,8 +72,8 @@ jobs:
 
     - name: Update YAMLs
       run: |
-          SQS_URL=${{ env.sqs_url }}
-          ROLE_ARN="${{ env.iam_role_arn }}"
+          SQS_URL=$sqs_url
+          ROLE_ARN=$iam_role_arn
 
           sed -i 's|<QUEUE_URL>|'"${SQS_URL}"'|g' Infra/k8s/scaledobjects.yaml
           sed -i 's|<ROLE_ARN>|'"${ROLE_ARN}"'|g' Infra/k8s/serviceaccount.yaml
