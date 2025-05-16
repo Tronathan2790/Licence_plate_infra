@@ -85,8 +85,8 @@ jobs:
           SQS_URL=$(echo "${{ env.sqs_url }}" | tr -d '\n')
           ROLE_ARN=$(echo "${{ env.iam_role_arn }}" | tr -d '\n')
 
-          sed -i 's|<QUEUE_URL>|'"${SQS_URL}"'|g' Infra/scaledobject.yaml
-          sed -i 's|<ROLE_ARN>|'"${ROLE_ARN}"'|g' Infra/serviceaccount.yaml
+          sed -i 's|<QUEUE_URL>|'"${SQS_URL}"'|g' Infra/k8s/scaledobjects.yaml
+          sed -i 's|<ROLE_ARN>|'"${ROLE_ARN}"'|g' Infra/k8s/serviceaccount.yaml
 
   Kubernetes:
     needs: terraform
