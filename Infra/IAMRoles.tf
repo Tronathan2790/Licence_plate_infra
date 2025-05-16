@@ -92,3 +92,47 @@ resource "aws_iam_role_policy_attachment" "lambda_dynamo_attach" {
   role       = aws_iam_role.iam_for_s3_lambda.name
   policy_arn = aws_iam_policy.lambda_dynamo_policy.arn
 }
+
+
+data "aws_iam_policy_document" "keda_assume_role" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(module.eks.oidc_provider_url, "https://", "")}:sub"
+      values   = ["system:serviceaccount:default:keda-sqs-reader"]
+    }
+
+    principals {
+      type        = "Federated"
+      identifiers = [module.eks.oidc_provider_arn]
+    }
+  }
+}
+
+resource "aws_iam_role" "keda_sqs_role" {
+  name               = "keda-sqs-role"
+  assume_role_policy = data.aws_iam_policy_document.keda_assume_role.json
+}
+
+resource "aws_iam_role_policy" "keda_sqs_access" {
+  name = "keda-sqs-access"
+  role = aws_iam_role.keda_sqs_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = [
+          "sqs:GetQueueAttributes",
+          "sqs:GetQueueUrl",
+          "sqs:ReceiveMessage",
+          "sqs:ListQueues"
+        ],
+        Resource = aws_sqs_queue.licence_plate_queue.arn
+      }
+    ]
+  })
+}

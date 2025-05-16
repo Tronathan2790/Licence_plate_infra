@@ -15,26 +15,28 @@ def lambda_handler(event,context):
 
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(DYNAMODB_TABLE_NAME)
-    current_time = str(datetime.utcnow().isoformat())
-    id = str(uuid.uuid4())
+    current_time = str(datetime.datetime.now())
+    JobID = str(uuid.uuid4())
     item = {
-        'JobID': id,
+        'JobID': JobID,
         'uuid': user_uuid,
         'StartTime': current_time,
+        "imageName": key_name,
         'TimeCompleted': "",
         'Licence_plate': "",
         'State': "",
         'Status':"Processing"
     }
     table.put_item(Item=item)
-    print(f"✅ Saved to DynamoDB: {item}")
+    print(f"Saved to DynamoDB: {item}")
 
 
     sqs = boto3.resource('sqs')
     message = {
     "bucket_name": bucket_name,
     "Key": key_name,
-    "uuid": uuid
+    "uuid": user_uuid,
+    "JobID": JobID
     }
     queue = sqs.get_queue_by_name(QueueName=SQS_QUEUE_NAME)
     response = queue.send_message(MessageBody=json.dumps(message))

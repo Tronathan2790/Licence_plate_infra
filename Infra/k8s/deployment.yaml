@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: license-plate-detection
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: license-plate
+  template:
+    metadata:
+      labels:
+        app: license-plate
+    spec:
+      serviceAccountName: keda-sqs-reader
+      containers:
+        - name: license-plate
+          image: tron2790/licence-plate-detection:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080

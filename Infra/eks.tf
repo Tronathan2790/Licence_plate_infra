@@ -1,11 +1,11 @@
-module "eks" {
+module "eks"  {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.0"
 
-  cluster_name    = "my-cluster"
+  cluster_name    = "Licence_Plate_Cluster"
   cluster_version = "1.31"
 
-  
+  enable_irsa = true
   # Optional
   cluster_endpoint_public_access = true
 
@@ -17,7 +17,7 @@ module "eks" {
 
  
   eks_managed_node_groups = {
-    example = {
+    Licence_Plate_Cluster = {
     
       instance_types = ["t3.medium"]
 
@@ -32,3 +32,4 @@ module "eks" {
     Terraform   = "true"
   }
 }
+

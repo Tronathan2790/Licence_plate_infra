@@ -1,0 +1,16 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: license-plate-scaler
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: license-plate-detection
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+    - type: aws-sqs-queue
+      metadata:
+        queueURL: <QUEUE_URL>
+        queueLength: "5"
+        awsRegion: ap-southeast-2

@@ -43,7 +43,7 @@ jobs:
       working-directory: ./Infra
       run: terraform init
 
-
+    
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
@@ -55,3 +55,42 @@ jobs:
     - name: Terraform Apply
       working-directory: ./Infra
       run: terraform apply -auto-approve -input=false
+    
+    - name: Capture outputs
+      run: |
+          echo "sqs_url=$(terraform -chdir=Infra output -raw sqs_queue_url)" >> $GITHUB_ENV
+          echo "iam_role_arn=$(terraform -chdir=Infra output -raw keda_sqs_role_arn)" >> $GITHUB_ENV
+          echo "CLUSTER_NAME=$(terraform -chdir=Infra output -raw eks_cluster_name)" >> $GITHUB_ENV
+    - name: Update YAMLs
+      run: |
+          sed -i "s|<QUEUE_URL>|${{ env.sqs_url }}|g" Infra/k8s/scaledobject.yaml
+          sed -i "s|<ROLE_ARN>|${{ env.iam_role_arn }}|g" Infra/k8s/serviceaccount.yaml
+
+  Kubernetes:
+    name: 'Setup Kubernetes'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: v1.29.2
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
+      - name: Apply Kubernetes resources
+        run: |
+          kubectl apply -f Infra/k8s/serviceaccount.yaml
+          kubectl apply -f Infra/k8s/deployment.yaml
+          kubectl apply -f Infra/k8s/scaledobject.yaml
+         
