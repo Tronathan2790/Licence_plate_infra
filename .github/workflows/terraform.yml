@@ -63,9 +63,9 @@ jobs:
     
     - name: Capture outputs
       run: |
-          echo "sqs_url=$(terraform -chdir=Infra output -raw sqs_queue_url)" >> $GITHUB_ENV
-          echo "iam_role_arn=$(terraform -chdir=Infra output -raw keda_sqs_role_arn)" >> $GITHUB_ENV
-          echo "CLUSTER_NAME=$(terraform -chdir=Infra output -raw eks_cluster_name)" >> $GITHUB_ENV
+          echo "sqs_url=$(terraform -chdir=Infra output -raw sqs_queue_url | tr -d '\r')" >> $GITHUB_ENV
+          echo "iam_role_arn=$(terraform -chdir=Infra output -raw keda_sqs_role_arn | tr -d '\r')" >> $GITHUB_ENV
+          echo "CLUSTER_NAME=$(terraform -chdir=Infra output -raw eks_cluster_name | tr -d '\r')" >> $GITHUB_ENV
     - name: Update YAMLs
       run: |
           sed -i "s|<QUEUE_URL>|${{ env.sqs_url }}|g" Infra/k8s/scaledobject.yaml
