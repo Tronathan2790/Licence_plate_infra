@@ -9,3 +9,11 @@ output "sqs_queue_url" {
 output "keda_sqs_role_arn" {
   value = aws_iam_role.keda_sqs_role.arn
 }
+
+output "oidc_provider_url" {
+  value = module.eks.oidc_provider
+}
+
+output "oidc_provider_arn" {
+  value = module.eks.oidc_provider_arn
+}

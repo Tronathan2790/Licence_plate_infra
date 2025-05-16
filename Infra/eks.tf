@@ -33,3 +33,15 @@ module "eks"  {
   }
 }
 
+data "aws_eks_cluster" "this" {
+  name = "Licence_Plate_Cluster"  
+}
+
+data "aws_eks_cluster_auth" "this" {
+  name = data.aws_eks_cluster.this.name
+}
+
+data "aws_iam_openid_connect_provider" "this" {
+  url = data.aws_eks_cluster.this.identity[0].oidc[0].issuer
+}
+

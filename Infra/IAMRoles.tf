@@ -88,25 +88,19 @@ resource "aws_iam_policy" "lambda_dynamo_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_dynamo_attach" {
-  role       = aws_iam_role.iam_for_s3_lambda.name
-  policy_arn = aws_iam_policy.lambda_dynamo_policy.arn
-}
-
-
 data "aws_iam_policy_document" "keda_assume_role" {
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
 
     condition {
       test     = "StringEquals"
-      variable = "${replace(module.eks.oidc_provider_url, "https://", "")}:sub"
+      variable = "${replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")}:sub"
       values   = ["system:serviceaccount:default:keda-sqs-reader"]
     }
 
     principals {
       type        = "Federated"
-      identifiers = [module.eks.oidc_provider_arn]
+      identifiers = [data.aws_iam_openid_connect_provider.this.arn]
     }
   }
 }
