@@ -63,8 +63,10 @@ jobs:
     
     - name: Export Terraform Outputs to GitHub Environment
       run: |
-          echo "sqs_url=$(terraform  output  sqs_queue_url)" >> $GITHUB_ENV
-          echo "iam_role_arn=$(terraform  output  keda_sqs_role_arn)" >> $GITHUB_ENV
+          sqs_url=$(terraform  output  sqs_queue_url) >> $GITHUB_ENV
+          iam_role_arn=$(terraform  output  keda_sqs_role_arn) >> $GITHUB_ENV
+          echo $sqs_url
+          echo $iam_role_arn
 
     - name: Update YAMLs
       run: |
