@@ -116,5 +116,5 @@ jobs:
         run: |
           kubectl apply -f Infra/k8s/serviceaccount.yaml
           kubectl apply -f Infra/k8s/deployment.yaml
-          kubectl apply -f Infra/k8s/scaledobject.yaml
+          kubectl apply -f Infra/k8s/scaledobjects.yaml
          
