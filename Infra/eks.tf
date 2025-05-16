@@ -3,7 +3,7 @@ module "eks"  {
   version = "~> 20.0"
 
   cluster_name    = "Licence_Plate_Cluster"
-  cluster_version = "1.33"
+  cluster_version = "1.32.3"
 
   enable_irsa = true
   # Optional
