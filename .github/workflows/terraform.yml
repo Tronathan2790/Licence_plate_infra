@@ -105,13 +105,13 @@ jobs:
       - name: Install kubectl
         uses: azure/setup-kubectl@v4
         with:
-          version: v1.31.0
+          version: v1.33
       - name: Update kubeconfig
         run: |
           aws eks update-kubeconfig --region ap-southeast-2 --name Licence_Plate_Cluster
-      - name: Apply Kubernetes resources
-        run: |
-          kubectl apply --validate=false -f Infra/k8s/serviceaccount.yaml
-          kubectl apply --validate=false -f Infra/k8s/deployment.yaml
-          kubectl apply --validate=false -f Infra/k8s/scaledobjects.yaml
+          kubectl apply -f Infra/k8s/serviceaccount.yaml
+          kubectl apply -f Infra/k8s/deployment.yaml
+          kubectl apply -f Infra/k8s/scaledobjects.yaml
+      
+          
          
