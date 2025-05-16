@@ -46,9 +46,9 @@ jobs:
     - name: Terraform Apply Vpc
       working-directory: ./Infra
       run: terraform apply -target=module.vpc -auto-approve -input=false
-    - name: Terraform Apply EKS
-      working-directory: ./Infra
-      run: terraform apply -target=module.eks -auto-approve -input=false
+    # - name: Terraform Apply EKS
+    #   working-directory: ./Infra
+    #   run: terraform apply -target=module.eks -auto-approve -input=false
     
     # Generates an execution plan for Terraform
     - name: Terraform Plan
@@ -62,6 +62,7 @@ jobs:
       run: terraform apply -auto-approve -input=false
     
     - name: Export Terraform Outputs to GitHub Environment
+      working-directory: ./Infra
       run: |
           sqs_url=$(terraform  output  sqs_queue_url) >> $GITHUB_ENV
           iam_role_arn=$(terraform  output  keda_sqs_role_arn) >> $GITHUB_ENV
@@ -76,36 +77,36 @@ jobs:
           sed -i 's|<QUEUE_URL>|'"${SQS_URL}"'|g' Infra/k8s/scaledobjects.yaml
           sed -i 's|<ROLE_ARN>|'"${ROLE_ARN}"'|g' Infra/k8s/serviceaccount.yaml
 
-  Kubernetes:
-    needs: terraform
+  # Kubernetes:
+  #   needs: terraform
 
-    name: 'Setup Kubernetes'
-    runs-on: ubuntu-latest
-    environment: production
-    defaults:
-      run:
-        shell: bash
+  #   name: 'Setup Kubernetes'
+  #   runs-on: ubuntu-latest
+  #   environment: production
+  #   defaults:
+  #     run:
+  #       shell: bash
     
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-southeast-2
-      - name: Install kubectl
-        uses: azure/setup-kubectl@v4
-        with:
-          version: v1.31.0
-      - name: Update kubeconfig
-        run: |
-          aws eks update-kubeconfig --region ap-southeast-2 --name Licence_Plate_Cluster
-          kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.17.0/keda-2.17.0.yaml
-          kubectl apply -f Infra/k8s/serviceaccount.yaml
-          kubectl apply -f Infra/k8s/deployment.yaml
-          kubectl apply -f Infra/k8s/scaledobjects.yaml
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #     - name: Configure AWS Credentials
+  #       uses: aws-actions/configure-aws-credentials@v2
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ap-southeast-2
+  #     - name: Install kubectl
+  #       uses: azure/setup-kubectl@v4
+  #       with:
+  #         version: v1.31.0
+  #     - name: Update kubeconfig
+  #       run: |
+  #         aws eks update-kubeconfig --region ap-southeast-2 --name Licence_Plate_Cluster
+  #         kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.17.0/keda-2.17.0.yaml
+  #         kubectl apply -f Infra/k8s/serviceaccount.yaml
+  #         kubectl apply -f Infra/k8s/deployment.yaml
+  #         kubectl apply -f Infra/k8s/scaledobjects.yaml
       
           
          
