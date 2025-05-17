@@ -44,9 +44,7 @@ module "eks"  {
       http_tokens              = "required"   
       http_put_response_hop_limit = 2
     }
-      iam_role_additional_policies = {
-        custom_policy  = aws_iam_policy.eks_plate_policy.arn
-      }
+      
   }
   }
 

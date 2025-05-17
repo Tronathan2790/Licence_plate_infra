@@ -98,7 +98,7 @@ data "aws_iam_policy_document" "keda_assume_role" {
     condition {
       test     = "StringEquals"
       variable = "${replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")}:sub"
-      values   = ["system:serviceaccount:keda:keda-operator"]
+      values   = ["system:serviceaccount:default:keda-sqs-reader"]
     }
 
     principals {
