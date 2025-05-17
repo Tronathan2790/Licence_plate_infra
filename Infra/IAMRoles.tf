@@ -101,7 +101,7 @@ data "aws_iam_policy_document" "keda_assume_role" {
     ]
     principals {
       type        = "AWS"
-      identifiers = data.aws_eks_cluster.this.node_roe_arn
+      identifiers = data.aws_eks_cluster.this.node_role_arn
     }
   }
   statement {
