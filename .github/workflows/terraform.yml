@@ -62,22 +62,22 @@ jobs:
       working-directory: ./Infra
       run: terraform apply -auto-approve -input=false
     
-    - name: Export Terraform Outputs to GitHub Environment
-      working-directory: ./Infra
-      run: |
-          sqs_url=$(terraform  output  sqs_queue_url) >> $GITHUB_ENV
-          iam_role_arn=$(terraform  output  keda_sqs_role_arn) >> $GITHUB_ENV
-          echo $sqs_url
-          echo $iam_role_arn
+    # - name: Export Terraform Outputs to GitHub Environment
+    #   working-directory: ./Infra
+    #   run: |
+    #       sqs_url=$(terraform  output  sqs_queue_url) >> $GITHUB_ENV
+    #       iam_role_arn=$(terraform  output  keda_sqs_role_arn) >> $GITHUB_ENV
+    #       echo $sqs_url
+    #       echo $iam_role_arn
 
-    - name: Update YAMLs
-      run: |
-          SQS_URL=$(echo $sqs_url)
-          ROLE_ARN=$(echo $iam_role_arn)
-          echo $SQS_URL
-          echo $ROLE_ARN
-          sed -i 's/<QUEUE_URL>/'"${SQS_URL}"'/g' Infra/k8s/scaledobjects.yaml
-          sed -i 's/<ROLE_ARN>/'"${ROLE_ARN}"'/g' Infra/k8s/serviceaccount.yaml
+    # - name: Update YAMLs
+    #   run: |
+    #       SQS_URL=$(echo $sqs_url)
+    #       ROLE_ARN=$(echo $iam_role_arn)
+    #       echo $SQS_URL
+    #       echo $ROLE_ARN
+    #       sed -i 's/<QUEUE_URL>/'"${SQS_URL}"'/g' Infra/k8s/scaledobjects.yaml
+    #       sed -i 's/<ROLE_ARN>/'"${ROLE_ARN}"'/g' Infra/k8s/serviceaccount.yaml
           
 
   Kubernetes:
