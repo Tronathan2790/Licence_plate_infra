@@ -134,6 +134,11 @@ resource "aws_iam_role_policy" "keda_sqs_access" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "Attach_eks_policy" {
+  role       = aws_iam_role.keda_sqs_role.name
+  policy_arn = aws_iam_policy.eks_plate_policy.arn
+}
+
 resource "aws_iam_policy" "eks_plate_policy" {
   name        = "eks-plate-policy"
   description = "Allows access to specific resources"
