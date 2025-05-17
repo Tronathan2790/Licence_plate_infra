@@ -5,7 +5,7 @@ metadata:
   namespace: keda
 spec:
   podIdentity:
-    provider: keda-sqs-role # or aws-eks when using IRSA
+    provider: aws-eks # or aws-eks when using IRSA
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
