@@ -92,9 +92,21 @@ resource "aws_iam_role_policy_attachment" "lambda_Dynamo_attach" {
   policy_arn = aws_iam_policy.lambda_dynamo_policy.arn
 }
 data "aws_iam_policy_document" "keda_assume_role" {
+
+  statement {
+    sid    = "AssumeRoleKedaOperator"
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole",
+    ]
+    principals {
+      type        = "AWS"
+      identifiers = data.aws_eks_cluster.this.node_roe_arn
+    }
+  }
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
-
+    
     condition {
       test     = "StringEquals"
       variable = "${replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")}:sub"

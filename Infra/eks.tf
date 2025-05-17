@@ -54,6 +54,10 @@ module "eks"  {
   }
 }
 
+data "aws_eks_cluster_role" "this" {
+  name = data.aws_eks_cluster.this.node_roe_arn
+}
+
 data "aws_eks_cluster" "this" {
   name = "Licence_Plate_Cluster"  
 }
