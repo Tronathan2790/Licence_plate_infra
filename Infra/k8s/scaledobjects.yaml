@@ -25,3 +25,4 @@ spec:
         queueURL: https://sqs.ap-southeast-2.amazonaws.com/346337206895/licence_plate_queue
         queueLength: "5"
         awsRegion: ap-southeast-2
+        identityOwner: operator
