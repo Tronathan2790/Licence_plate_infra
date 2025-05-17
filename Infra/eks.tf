@@ -54,9 +54,7 @@ module "eks"  {
   }
 }
 
-data "aws_eks_cluster_node_role_arn" "this" {
-  name = data.aws_eks_cluster.node_role_arn 
-}
+
 
 
 data "aws_eks_cluster" "this" {
