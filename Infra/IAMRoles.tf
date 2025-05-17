@@ -147,7 +147,7 @@ resource "aws_iam_policy" "eks_plate_policy" {
     Statement = [
       {
         Effect   = "Allow"
-        Action   = ["s3:GetObject"]
+        Action   = ["s3:GetObject", "s3:ListBucket"]
         Resource = [aws_s3_bucket.licence_plate_bucket.arn,
                     "${aws_s3_bucket.licence_plate_bucket.arn}/private/*"]
       },
