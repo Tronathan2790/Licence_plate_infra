@@ -148,12 +148,13 @@ resource "aws_iam_policy" "eks_plate_policy" {
       {
         Effect   = "Allow"
         Action   = ["s3:GetObject"]
-        Resource = aws_s3_bucket.licence_plate_bucket.arn
+        Resource = [aws_s3_bucket.licence_plate_bucket.arn,
+                    "${aws_s3_bucket.licence_plate_bucket.arn}/private/*"]
       },
       {
         Effect   = "Allow"
         Action   = ["sqs:SendMessage", "sqs:ReceiveMessage", "sqs:DeleteMessage"]
-        Resource = "arn:aws:sqs:ap-southeast-2:123456789012:my-queue"
+        Resource = aws_sqs_queue.licence_plate_queue.arn
       },
       {
         Effect   = "Allow"
