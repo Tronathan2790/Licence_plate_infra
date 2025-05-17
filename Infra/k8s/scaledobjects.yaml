@@ -2,7 +2,7 @@ apiVersion: keda.sh/v1alpha1
 kind: TriggerAuthentication
 metadata:
   name: keda-trigger-auth-aws-credentials
-  namespace: keda
+  namespace: default
 spec:
   podIdentity:
     provider: aws-eks # or aws-eks when using IRSA
@@ -15,10 +15,10 @@ metadata:
 spec:
   scaleTargetRef:
     name: license-plate-detection
-  minReplicaCount: 1
-  maxReplicaCount: 10
   triggers:
     - type: aws-sqs-queue
+      authenticationRef:
+        name: keda-trigger-auth-aws-credentials
       metadata:
         queueURL: https://sqs.ap-southeast-2.amazonaws.com/346337206895/licence_plate_queue
         queueLength: "5"
