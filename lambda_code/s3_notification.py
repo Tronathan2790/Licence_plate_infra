@@ -42,3 +42,4 @@ def lambda_handler(event,context):
     response = queue.send_message(MessageBody=json.dumps(message))
     print(response.get('MessageId'))
     print(response.get('MD5OfMessageBody'))
+    #deplloyment
